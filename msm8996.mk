@@ -305,9 +305,9 @@ PRODUCT_PACKAGES += \
 
 # UBPorts
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/ubuntu/70-h918.rules:system/halium/lib/udev/rules.d/70-h918.rules \
-    $(LOCAL_PATH)/ubuntu/70-h918.rules:system/halium/usr/lib/lxc-android-config/70-h918.rules \
-    $(LOCAL_PATH)/ubuntu/70-h918.rules:system/halium/etc/udev/rules.d/70-h918.rules \
+    $(LOCAL_PATH)/ubuntu/70-h918.rules:system/halium/lib/udev/rules.d/70-android.rules \
+    $(LOCAL_PATH)/ubuntu/70-h918.rules:system/halium/usr/lib/lxc-android-config/70-android.rules \
+    $(LOCAL_PATH)/ubuntu/70-h918.rules:system/halium/etc/udev/rules.d/70-android.rules \
     $(LOCAL_PATH)/ubuntu/adbd.conf:system/halium/etc/init/adbd.conf \
     $(LOCAL_PATH)/ubuntu/adbd.conf:system/halium/etc/init/android-tools-adb.conf \
     $(LOCAL_PATH)/ubuntu/timekeeper.conf:system/halium/etc/init/timekeeper.conf \
@@ -315,11 +315,22 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ubuntu/config.xml:system/halium/usr/share/powerd/device_configs/config-default.xml \
     $(LOCAL_PATH)/ubuntu/android.conf:system/halium/etc/ubuntu-touch-session.d/android.conf \
     $(LOCAL_PATH)/ubuntu/bluetooth-touch-h918.conf:system/halium/etc/init/bluetooth-touch-android.conf \
+    $(LOCAL_PATH)/rootdir/bin/init.ath3k.bt.sh:system/etc/init.ath3k.bt.sh \
+    $(LOCAL_PATH)/rootdir/bin/init.qcom.bt.sh:system/etc/init.qcom.bt.sh \
     $(LOCAL_PATH)/ubuntu/touch.pa:system/halium/etc/pulse/touch.pa \
     $(LOCAL_PATH)/ubuntu/hciattach:system/bin/hciattach \
+    $(LOCAL_PATH)/ubuntu/switch:system/halium/usr/share/h2w/switch \
+    $(LOCAL_PATH)/ubuntu/tri_state.py:system/halium/usr/share/tri_state_switch/tri_state.py \
     $(LOCAL_PATH)/ubuntu/usr.bin.media-hub-server:system/halium/etc/apparmor.d/local/usr.bin.media-hub-server \
     $(LOCAL_PATH)/ubuntu/base:system/halium/etc/apparmor.d/abstractions/base \
-    $(LOCAL_PATH)/ubuntu/environment:system/halium/etc/environment
+    $(LOCAL_PATH)/ubuntu/environment:system/halium/etc/environment \
+    $(LOCAL_PATH)/ubuntu/apparmor-easyprof-ubuntu_graphics:system/halium/usr/share/apparmor/hardware/graphics.d/apparmor-easyprof-ubuntu_android \
+    $(LOCAL_PATH)/ubuntu/apparmor-easyprof-ubuntu_video:system/halium/usr/share/apparmor/hardware/video.d/apparmor-easyprof-ubuntu_android \
+    $(LOCAL_PATH)/rootdir/etc/init_wlan_bt.sh:system/etc/init_wlan_bt.sh \
+    $(LOCAL_PATH)/ubuntu/elsa:system/halium/usr/share/bluetooth-touch/h918 \
+    $(LOCAL_PATH)/ubuntu/BCM4358A310U.hcd:system/vendor/firmware/BCM4358A310U.hcd
+
+
 
 PRODUCT_PACKAGES += \
     libubuntu_application_api \
@@ -337,7 +348,15 @@ PRODUCT_PACKAGES += \
     libui_compat_layer \
     libsf_compat_layer \
     libaudioflingerglue \
-    camera_service
+    camera_service \
+    ubuntu-platform-api
+
+# telepathy-ofono quirks
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.t-o.quirk.forcesink=sink.primary_output \
+    ro.t-o.quirk.forcesource=source.record_24_primary_input \
+    media.stagefright.legacyencoder=true \
+    media.stagefright.less-secure=true
 
 #aethercastctl
 PRODUCT_PROPERTY_OVERRIDES += \

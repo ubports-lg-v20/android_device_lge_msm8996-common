@@ -927,6 +927,7 @@ service qseeproxydaemon /system/vendor/bin/qseeproxydaemon
     user system
     group system
     writepid /dev/cpuset/system-background/tasks
+    disabled
 
 # oneshot service that loads fpc tz app in early phase.
 service fpc_early_loader /system/bin/fpc_early_loader
@@ -963,3 +964,17 @@ on property:sys.boot_completed=1
     # Set permissions for dumpstate nodes
     chmod 0644 /d/rpm_stats
     chmod 0644 /d/dpm_master_stats
+
+service minimedia /system/bin/minimediaservice
+    class main
+    user media
+    group audio camera
+    ioprio rt 4
+#   hack to make recorded video playback work
+    setenv LD_PRELOAD /system/lib/libOmxVdec.so
+    setenv MINIMEDIA_SENSORSERVER_DISABLE 1
+    
+service miniafservice /system/bin/miniafservice
+    class core
+    user root
+    group audio

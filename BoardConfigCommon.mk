@@ -45,14 +45,19 @@ TARGET_NO_BOOTLOADER := true
 
 # Kernel
 BOARD_KERNEL_BASE := 0x80000000
-BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 cma=32M@0-0xffffffff androidboot.selinux=permissive enforcing=0 apparmor=1
+BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 cma=32M@0-0xffffffff androidboot.selinux=permissive enforcing=0 apparmor=1 cgroup_disable=memory audit=0
+#BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 user_debug=31 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 cma=32M@0-0xffffffff androidboot.hardware=qcom androidboot.selinux=permissive enforcing=0 apparmor=1 cgroup_disable=memory
+
+# BOARD_KERNEL_CMDLINE += initcall_debug ignore_loglevel
+
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_TAGS_OFFSET := 0x02000000
 BOARD_RAMDISK_OFFSET     := 0x02200000
 TARGET_KERNEL_APPEND_DTB := true
 TARGET_KERNEL_ARCH := arm64
-TARGET_KERNEL_SOURCE := kernel/lge/msm8996
+# TARGET_KERNEL_SOURCE := kernel/lge/msm-3.18-git
+TARGET_KERNEL_SOURCE := kernel/lge/msm-3.18-git
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
 
 # Audio
@@ -101,6 +106,7 @@ BOARD_CHARGING_CMDLINE_VALUE := "chargerlogo"
 # Camera
 USE_CAMERA_STUB := true
 USE_DEVICE_SPECIFIC_CAMERA := true
+#TARGET_HAS_LEGACY_CAMERA_HAL1 := true
 
 # CMHW
 BOARD_HARDWARE_CLASS += $(COMMON_PATH)/cmhw
@@ -204,6 +210,8 @@ BOARD_HOSTAPD_PRIVATE_LIB   := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 WIFI_DRIVER_FW_PATH_PARAM   := "/sys/module/bcmdhd/parameters/firmware_path"
 WIFI_DRIVER_FW_PATH_AP      := "/system/etc/firmware/fw_bcmdhd_apsta.bin"
 WIFI_DRIVER_FW_PATH_STA     := "/system/etc/firmware/fw_bcmdhd.bin"
+
+BOARD_HEALTHD_CUSTOM_CHARGER_RES := $(COMMON_PATH)/charger/images
 
 # inherit from the proprietary version
 -include vendor/lge/msm8996-common/BoardConfigVendor.mk
