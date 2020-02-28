@@ -25,7 +25,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-# import init.qcom.usb.rc
+import init.qcom.usb.rc
 import init.target.rc
 
 import init.device.rc
@@ -39,11 +39,18 @@ on charger
 
     # Setup zram options
     write /sys/block/zram0/comp_algorithm lz4
+    start charger_healthd
 
-service charger /sbin/healthd -c
-    class charger
+#service charger /sbin/healthd -c
+#    class charger
+#    critical
+#    seclabel u:r:healthd:s0
+
+service charger_healthd /sbin/healthd -c
+    class core
     critical
-    seclabel u:r:healthd:s0
+    group root system wakelock
+    disabled
 
 on init
     # Support legacy paths
@@ -81,8 +88,8 @@ on boot
     exec - root root system -- /system/bin/init.power.sh
 
     # Set permissions by node reads by dumpstate
-    chmod 0644 /sys/devices/system/cpu/present
-    chmod 0644 /sys/devices/system/cpu/online
+    chmod 0666 /sys/devices/system/cpu/present
+    chmod 0666 /sys/devices/system/cpu/online
 
     # set default schedTune value for foreground/top-app (only affects EAS)
     write /dev/stune/foreground/schedtune.prefer_idle 1
@@ -95,8 +102,8 @@ on boot
     start rmt_storage
     start rfs_access
     # access permission for secure touch
-    chmod 0660 /sys/devices/soc/75ba000.i2c/i2c-12/12-004a/secure_touch_enable
-    chmod 0440 /sys/devices/soc/75ba000.i2c/i2c-12/12-004a/secure_touch
+    chmod 0666 /sys/devices/soc/75ba000.i2c/i2c-12/12-004a/secure_touch_enable
+    chmod 0666 /sys/devices/soc/75ba000.i2c/i2c-12/12-004a/secure_touch
     chown system drmrpc /sys/devices/soc/75ba000.i2c/i2c-12/12-004a/secure_touch_enable
     chown system drmrpc /sys/devices/soc/75ba000.i2c/i2c-12/12-004a/secure_touch
     write /sys/devices/soc/75ba000.i2c/i2c-12/12-0020/input/input0/update_fw 1
@@ -195,17 +202,17 @@ on boot
     chown system graphics /sys/class/graphics/fb0/mode
     chown system graphics /sys/class/graphics/fb0/msm_cmd_autorefresh_en
     chown system graphics /sys/class/graphics/fb0/sp_link_backlight_off
-    chmod 0664 /sys/class/graphics/fb0/mdp/bw_mode_bitmap
-    chmod 0644 /sys/class/graphics/fb0/mdp/vfps
-    chmod 0644 /sys/class/graphics/fb0/mdp/vfps_fcnt
-    chmod 0644 /sys/class/graphics/fb0/mdp/vfps_ratio
-    chmod 0664 /sys/class/graphics/fb0/idle_time
-    chmod 0664 /sys/class/graphics/fb0/dynamic_fps
-    chmod 0664 /sys/class/graphics/fb0/dyn_pu
-    chmod 0664 /sys/class/graphics/fb0/modes
-    chmod 0664 /sys/class/graphics/fb0/mode
-    chmod 0664 /sys/class/graphics/fb0/msm_cmd_autorefresh_en
-    chmod 0644 /sys/class/graphics/fb0/sp_link_backlight_off
+    chmod 0666 /sys/class/graphics/fb0/mdp/bw_mode_bitmap
+    chmod 0666 /sys/class/graphics/fb0/mdp/vfps
+    chmod 0666 /sys/class/graphics/fb0/mdp/vfps_fcnt
+    chmod 0666 /sys/class/graphics/fb0/mdp/vfps_ratio
+    chmod 0666 /sys/class/graphics/fb0/idle_time
+    chmod 0666 /sys/class/graphics/fb0/dynamic_fps
+    chmod 0666 /sys/class/graphics/fb0/dyn_pu
+    chmod 0666 /sys/class/graphics/fb0/modes
+    chmod 0666 /sys/class/graphics/fb0/mode
+    chmod 0666 /sys/class/graphics/fb0/msm_cmd_autorefresh_en
+    chmod 0666 /sys/class/graphics/fb0/sp_link_backlight_off
 
     chown system graphics /sys/class/graphics/fb1/hdcp/tp
     chown system graphics /sys/class/graphics/fb1/hpd
@@ -219,78 +226,78 @@ on boot
     chown system graphics /sys/class/graphics/fb1/cec/rd_msg
     chown system graphics /sys/class/graphics/fb1/pa
     chown system graphics /sys/class/graphics/fb1/cec/wr_msg
-    chmod 664 /sys/class/graphics/fb1/hdcp/tp
-    chmod 664 /sys/class/graphics/fb1/hpd
-    chmod 664 /sys/class/graphics/fb1/vendor_name
-    chmod 664 /sys/class/graphics/fb1/product_description
-    chmod 664 /sys/class/graphics/fb1/res_info
-    chmod 664 /sys/class/graphics/fb1/video_mode
-    chmod 664 /sys/class/graphics/fb1/s3d_mode
-    chmod 664 /sys/class/graphics/fb1/cec/enable
-    chmod 664 /sys/class/graphics/fb1/cec/logical_addr
-    chmod 664 /sys/class/graphics/fb1/cec/rd_msg
-    chmod 664 /sys/class/graphics/fb1/pa
+    chmod 666 /sys/class/graphics/fb1/hdcp/tp
+    chmod 666 /sys/class/graphics/fb1/hpd
+    chmod 666 /sys/class/graphics/fb1/vendor_name
+    chmod 666 /sys/class/graphics/fb1/product_description
+    chmod 666 /sys/class/graphics/fb1/res_info
+    chmod 666 /sys/class/graphics/fb1/video_mode
+    chmod 666 /sys/class/graphics/fb1/s3d_mode
+    chmod 666 /sys/class/graphics/fb1/cec/enable
+    chmod 666 /sys/class/graphics/fb1/cec/logical_addr
+    chmod 666 /sys/class/graphics/fb1/cec/rd_msg
+    chmod 666 /sys/class/graphics/fb1/pa
     chmod 600 /sys/class/graphics/fb1/cec/wr_msg
 
     # Touch gestures
     chown system system /sys/devices/virtual/input/lge_touch/keyguard
-    chmod 664 /sys/devices/virtual/input/lge_touch/keyguard
+    chmod 666 /sys/devices/virtual/input/lge_touch/keyguard
     chown system system /sys/devices/virtual/input/lge_touch/lpwg_data
-    chmod 664 /sys/devices/virtual/input/lge_touch/lpwg_data
+    chmod 666 /sys/devices/virtual/input/lge_touch/lpwg_data
     chown system system /sys/devices/virtual/input/lge_touch/lpwg_notify
-    chmod 664 /sys/devices/virtual/input/lge_touch/lpwg_notify
+    chmod 666 /sys/devices/virtual/input/lge_touch/lpwg_notify
     chown system system /sys/devices/virtual/input/lge_touch/quick_cover_status
-    chmod 664 /sys/devices/virtual/input/lge_touch/quick_cover_status
+    chmod 666 /sys/devices/virtual/input/lge_touch/quick_cover_status
     chown system system /sys/devices/virtual/input/lge_touch/q_sensitivity
-    chmod 664 /sys/devices/virtual/input/lge_touch/q_sensitivity
+    chmod 666 /sys/devices/virtual/input/lge_touch/q_sensitivity
     chown system system /sys/devices/virtual/input/lge_touch/incoming_call
-    chmod 664 /sys/devices/virtual/input/lge_touch/incoming_call
+    chmod 666 /sys/devices/virtual/input/lge_touch/incoming_call
     chown system system /sys/devices/virtual/input/lge_touch/ime_status
-    chmod 664 /sys/devices/virtual/input/lge_touch/keyguard
+    chmod 666 /sys/devices/virtual/input/lge_touch/keyguard
     chown system system /sys/devices/virtual/input/lge_touch/debug_tool
-    chmod 664 /sys/devices/virtual/input/lge_touch/debug_tool
+    chmod 666 /sys/devices/virtual/input/lge_touch/debug_tool
     chown system system /sys/devices/virtual/input/lge_touch/debug_option
-    chmod 664 /sys/devices/virtual/input/lge_touch/debug_option
+    chmod 666 /sys/devices/virtual/input/lge_touch/debug_option
     chown system system /sys/devices/virtual/input/lge_touch/onhand
-    chmod 664 /sys/devices/virtual/input/lge_touch/onhand
+    chmod 666 /sys/devices/virtual/input/lge_touch/onhand
     chown system radio /sys/devices/virtual/input/lge_touch/tap2wake
-    chmod 664 /sys/devices/virtual/input/lge_touch/tap2wake
+    chmod 666 /sys/devices/virtual/input/lge_touch/tap2wake
 
     # External Display Watch
     chown system system /sys/devices/virtual/ext_watch/config_fontonoff
-    chmod 664 /sys/devices/virtual/ext_watch/config_fontonoff
+    chmod 666 /sys/devices/virtual/ext_watch/config_fontonoff
     chown system system /sys/devices/virtual/ext_watch/config_fontdata
-    chmod 664 /sys/devices/virtual/ext_watch/config_fontdata
+    chmod 666 /sys/devices/virtual/ext_watch/config_fontdata
     chown system system /sys/devices/virtual/ext_watch/config_fonteffect
-    chmod 664 /sys/devices/virtual/ext_watch/config_fonteffect
+    chmod 666 /sys/devices/virtual/ext_watch/config_fonteffect
     chown system system /sys/devices/virtual/ext_watch/config_fontproperty
-    chmod 664 /sys/devices/virtual/ext_watch/config_fontproperty
+    chmod 666 /sys/devices/virtual/ext_watch/config_fontproperty
     chown system system /sys/devices/virtual/ext_watch/config_fontposition
-    chmod 664 /sys/devices/virtual/ext_watch/config_fontposition
+    chmod 666 /sys/devices/virtual/ext_watch/config_fontposition
     chown system system /sys/devices/virtual/ext_watch/config_timesync
-    chmod 664 /sys/devices/virtual/ext_watch/config_timesync
+    chmod 666 /sys/devices/virtual/ext_watch/config_timesync
     chown system system /sys/devices/virtual/ext_watch/query_fontdata
-    chmod 664 /sys/devices/virtual/ext_watch/query_fontdata
+    chmod 666 /sys/devices/virtual/ext_watch/query_fontdata
     chown system system /sys/devices/virtual/ext_watch/query_fontposition
-    chmod 664 /sys/devices/virtual/ext_watch/query_fontposition
+    chmod 666 /sys/devices/virtual/ext_watch/query_fontposition
     chown system system /sys/devices/virtual/ext_watch/query_timesync
-    chmod 664 /sys/devices/virtual/ext_watch/query_timesync
+    chmod 666 /sys/devices/virtual/ext_watch/query_timesync
     chown system system /sys/devices/virtual/ext_watch/query_fontcolor
-    chmod 664 /sys/devices/virtual/ext_watch/query_fontcolor
+    chmod 666 /sys/devices/virtual/ext_watch/query_fontcolor
     chown system system /sys/devices/virtual/ext_watch/query_fonteffect
-    chmod 664 /sys/devices/virtual/ext_watch/query_fonteffect
+    chmod 666 /sys/devices/virtual/ext_watch/query_fonteffect
 
     # Always on Display
     chown system system /sys/class/graphics/fb0/aod
-    chmod 664 /sys/class/graphics/fb0/aod
+    chmod 666 /sys/class/graphics/fb0/aod
     chown system system /sys/class/graphics/fb0/keep_aod
-    chmod 664 /sys/class/graphics/fb0/keep_aod
+    chmod 666 /sys/class/graphics/fb0/keep_aod
     chown system system /sys/class/graphics/fb0/cur_panel_mode
-    chmod 644 /sys/class/graphics/fb0/cur_panel_mode
+    chmod 666 /sys/class/graphics/fb0/cur_panel_mode
     chown system system /sys/class/leds/lcd-backlight-ex/brightness
-    chmod 664 /sys/class/leds/lcd-backlight-ex/brightness
+    chmod 666 /sys/class/leds/lcd-backlight-ex/brightness
     chown system system /system/bin/AODLayer
-    chmod 664 /system/bin/AODLayer
+    chmod 666 /system/bin/AODLayer
 
     # High Luminance Mode
     chown system system /sys/devices/virtual/graphics/fb0/hl_mode
@@ -305,10 +312,10 @@ on boot
     chown system system /sys/class/panel/img_tune/color_enhancement
     chown system system /sys/class/panel/img_tune/image_enhance_set
     chown system system /sys/class/panel/img_tune/cabc
-    chmod 664 /sys/class/panel/img_tune/sharpness
-    chmod 664 /sys/class/panel/img_tune/color_enhancement
-    chmod 664 /sys/class/panel/img_tune/image_enhance_set
-    chmod 664 /sys/class/panel/img_tune/cabc
+    chmod 666 /sys/class/panel/img_tune/sharpness
+    chmod 666 /sys/class/panel/img_tune/color_enhancement
+    chmod 666 /sys/class/panel/img_tune/image_enhance_set
+    chmod 666 /sys/class/panel/img_tune/cabc
 
     # Vibrator adjustment
     chown system system /sys/class/timed_output/vibrator/amp
@@ -346,14 +353,36 @@ on boot
 
     # LEDs
     chown system system /sys/devices/virtual/lg_rgb_led/use_patterns/blink_patterns
-    chmod 0644 /sys/devices/virtual/lg_rgb_led/use_patterns/blink_patterns
+    chmod 0666 /sys/devices/virtual/lg_rgb_led/use_patterns/blink_patterns
     chown system system /sys/devices/virtual/lg_rgb_led/use_patterns/input_patterns
-    chmod 0644 /sys/devices/virtual/lg_rgb_led/use_patterns/input_patterns
+    chmod 0666 /sys/devices/virtual/lg_rgb_led/use_patterns/input_patterns
     chown system system /sys/devices/virtual/lg_rgb_led/use_patterns/onoff_patterns
-    chmod 0644 /sys/devices/virtual/lg_rgb_led/use_patterns/onoff_patterns
+    chmod 0666 /sys/devices/virtual/lg_rgb_led/use_patterns/onoff_patterns
     chown system system /sys/devices/virtual/lg_rgb_led/use_patterns/setting
-    chmod 0644 /sys/devices/virtual/lg_rgb_led/use_patterns/setting
+    chmod 0666 /sys/devices/virtual/lg_rgb_led/use_patterns/setting
     write /sys/devices/virtual/lg_rgb_led/use_patterns/setting 1
+
+    #Vibrator
+    chmod 0666 /sys/class/timed_output/vibrator/enable
+    
+    #Battery charging Mgnt
+    chmod 0666 /sys/class/power_supply/battery/charging_enabled
+
+
+    #LEDs
+    chmod 0666 /sys/class/leds/red/blink
+    chmod 0666 /sys/class/leds/red/brightness
+    chmod 0666 /sys/class/leds/green/blink
+    chmod 0666 /sys/class/leds/green/brightness
+    chmod 0666 /sys/class/leds/blue/blink
+    chmod 0666 /sys/class/leds/blue/brightness
+    
+    #torch
+    chmod 0666 /sys/class/leds/led:switch/brightness
+    chmod 0666 /sys/class/leds/torch-light0/brightness
+    chmod 0666 /sys/class/leds/torch-light1/brightness
+    chmod 0666 /sys/class/leds/led:torch_0/brightness
+    chmod 0666 /sys/class/leds/led:torch_1/brightness
 
     write /proc/sys/net/core/netdev_max_backlog 5000
 
@@ -367,9 +396,9 @@ service conn_init /system/bin/hwaddrs
     oneshot
 
 on property:init.svc.conn_init=stopped
-    chmod 0644 /data/misc/wifi/config
+    chmod 0666 /data/misc/wifi/config
     chown system wifi /data/misc/wifi/config
-    chmod 0644 /data/misc/bluetooth/bdaddr
+    chmod 0666 /data/misc/bluetooth/bdaddr
     chown bluetooth bluetooth /data/misc/bluetooth/bdaddr
 
 on post-fs
@@ -646,38 +675,6 @@ service dpmd /system/bin/dpmd
     group system readproc
     writepid /dev/cpuset/system-background/tasks
 
-service imsqmidaemon /system/bin/imsqmidaemon
-    class main
-    user system
-    socket ims_qmid stream 0660 system radio
-    group radio net_raw log qcom_diag wakelock
-
-service imsdatadaemon /system/bin/imsdatadaemon
-    class main
-    user system
-    socket ims_datad stream 0660 system radio
-    group system wifi radio inet net_raw log qcom_diag net_admin
-    disabled
-
-on property:sys.ims.QMI_DAEMON_STATUS=1
-    start imsdatadaemon
-
-service ims_rtp_daemon /system/bin/ims_rtp_daemon
-    class main
-    user system
-    socket ims_rtpd stream 0660 system radio
-    group radio net_raw qcom_diag inet log
-    disabled
-
-service imscmservice /system/bin/imscmservice
-    class main
-    user system
-    group radio net_raw qcom_diag inet log
-    disabled
-
-on property:sys.ims.DATA_DAEMON_STATUS=1
-    start ims_rtp_daemon
-    start imscmservice
 
 service irsc_util /system/bin/irsc_util "/etc/sec_config"
     class core
@@ -725,6 +722,7 @@ service qmuxd /system/bin/qmuxd
     user radio
     group radio audio bluetooth gps nfc qcom_diag
     writepid /dev/cpuset/system-background/tasks
+
 
 service netmgrd /system/bin/netmgrd
     class main
@@ -866,14 +864,6 @@ service ds_fmc_appd /system/bin/ds_fmc_appd -p "rmnet0" -D
 on property:persist.data.ds_fmc_app.mode=1
     start ds_fmc_appd
 
-service ims_regmanager /system/bin/exe-ims-regmanagerprocessnative
-    class late_start
-    group net_bt_admin inet radio wifi
-    disabled
-
-on property:persist.ims.regmanager.mode=1
-    start ims_regmanager
-
 on property:ro.data.large_tcp_window_size=true
     # Adjust socket buffer to enlarge TCP receive window for high bandwidth (e.g. DO-RevB)
     write /proc/sys/net/ipv4/tcp_adv_win_scale  2
@@ -922,19 +912,19 @@ service msm_irqbalance /system/bin/msm_irqbalance -f /system/vendor/etc/msm_irqb
     group root
     disabled
 
-service qseeproxydaemon /system/vendor/bin/qseeproxydaemon
-    class late_start
-    user system
-    group system
-    writepid /dev/cpuset/system-background/tasks
-    disabled
+#service qseeproxydaemon /system/vendor/bin/qseeproxydaemon
+#    class late_start
+#    user system
+#    group system
+#    writepid /dev/cpuset/system-background/tasks
+#    disable
 
 # oneshot service that loads fpc tz app in early phase.
-service fpc_early_loader /system/bin/fpc_early_loader
-    class late_start
-    user system
-    group system
-    oneshot
+#service fpc_early_loader /system/bin/fpc_early_loader
+#    class late_start
+#    user system
+#    group system
+#    oneshot
 
 on configure-cpuset
     # Update foreground and background cpusets
@@ -965,16 +955,24 @@ on property:sys.boot_completed=1
     chmod 0644 /d/rpm_stats
     chmod 0644 /d/dpm_master_stats
 
+# minimediaservice service
 service minimedia /system/bin/minimediaservice
+    setenv LD_LIBRARY_PATH /system/lib:/vendor/lib:/odm/lib
     class main
     user media
     group audio camera
     ioprio rt 4
-#   hack to make recorded video playback work
     setenv LD_PRELOAD /system/lib/libOmxVdec.so
     setenv MINIMEDIA_SENSORSERVER_DISABLE 1
-    
+
 service miniafservice /system/bin/miniafservice
     class core
     user root
     group audio
+
+
+# adbd is controlled via property triggers in init.<platform>.usb.rc
+#service adbd /system/bin/adbd --root_seclabel=u:r:su:s0
+#    class core
+#    socket adbd stream 660 system system
+#    seclabel u:r:adbd:s0

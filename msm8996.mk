@@ -129,11 +129,12 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     fstab.qcom \
     init.qcom.rc \
+    init.qcom.usb.rc \
     init.qcom.sh \
     init.qcom.sensors.sh \
-    init.qcom.usb.rc \
     init.target.rc \
     ueventd.qcom.rc
+
 
 # Display
 PRODUCT_PACKAGES += \
@@ -308,59 +309,57 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ubuntu/70-h918.rules:system/halium/lib/udev/rules.d/70-android.rules \
     $(LOCAL_PATH)/ubuntu/70-h918.rules:system/halium/usr/lib/lxc-android-config/70-android.rules \
     $(LOCAL_PATH)/ubuntu/70-h918.rules:system/halium/etc/udev/rules.d/70-android.rules \
-    $(LOCAL_PATH)/ubuntu/adbd.conf:system/halium/etc/init/adbd.conf \
-    $(LOCAL_PATH)/ubuntu/adbd.conf:system/halium/etc/init/android-tools-adb.conf \
     $(LOCAL_PATH)/ubuntu/timekeeper.conf:system/halium/etc/init/timekeeper.conf \
     $(LOCAL_PATH)/ubuntu/ofono.override:system/halium/etc/init/ofono.override \
     $(LOCAL_PATH)/ubuntu/config.xml:system/halium/usr/share/powerd/device_configs/config-default.xml \
     $(LOCAL_PATH)/ubuntu/android.conf:system/halium/etc/ubuntu-touch-session.d/android.conf \
     $(LOCAL_PATH)/ubuntu/bluetooth-touch-h918.conf:system/halium/etc/init/bluetooth-touch-android.conf \
-    $(LOCAL_PATH)/rootdir/bin/init.ath3k.bt.sh:system/etc/init.ath3k.bt.sh \
-    $(LOCAL_PATH)/rootdir/bin/init.qcom.bt.sh:system/etc/init.qcom.bt.sh \
+    $(LOCAL_PATH)/ubuntu/bluetooth-touch-h918.conf:system/halium/etc/init/bluetooth-touch-h918.conf \
+    $(LOCAL_PATH)/ubuntu/adbd.conf:system/halium/etc/init/adbd.conf \
     $(LOCAL_PATH)/ubuntu/touch.pa:system/halium/etc/pulse/touch.pa \
     $(LOCAL_PATH)/ubuntu/hciattach:system/bin/hciattach \
-    $(LOCAL_PATH)/ubuntu/switch:system/halium/usr/share/h2w/switch \
-    $(LOCAL_PATH)/ubuntu/tri_state.py:system/halium/usr/share/tri_state_switch/tri_state.py \
     $(LOCAL_PATH)/ubuntu/usr.bin.media-hub-server:system/halium/etc/apparmor.d/local/usr.bin.media-hub-server \
     $(LOCAL_PATH)/ubuntu/base:system/halium/etc/apparmor.d/abstractions/base \
     $(LOCAL_PATH)/ubuntu/environment:system/halium/etc/environment \
     $(LOCAL_PATH)/ubuntu/apparmor-easyprof-ubuntu_graphics:system/halium/usr/share/apparmor/hardware/graphics.d/apparmor-easyprof-ubuntu_android \
     $(LOCAL_PATH)/ubuntu/apparmor-easyprof-ubuntu_video:system/halium/usr/share/apparmor/hardware/video.d/apparmor-easyprof-ubuntu_android \
-    $(LOCAL_PATH)/rootdir/etc/init_wlan_bt.sh:system/etc/init_wlan_bt.sh \
     $(LOCAL_PATH)/ubuntu/elsa:system/halium/usr/share/bluetooth-touch/h918 \
-    $(LOCAL_PATH)/ubuntu/BCM4358A310U.hcd:system/vendor/firmware/BCM4358A310U.hcd
+    $(LOCAL_PATH)/ubuntu/BCM4358A310U.hcd:system/vendor/firmware/BCM4358A310U.hcd \
+    $(LOCAL_PATH)/ubuntu/switch:system/halium/usr/share/h2w/switch
 
-
-
+# Ubuntu
 PRODUCT_PACKAGES += \
-    libubuntu_application_api \
-    direct_ubuntu_application_sensors_c_api_for_hybris_test \
-    direct_ubuntu_application_sensors_for_hybris_test \
-    direct_ubuntu_application_gps_c_api_for_hybris_test \
-    libcamera_compat_layer \
-    libmedia_compat_layer \
-    libdroidmedia \
+    libaudioflingerglue \
     libminisf \
-    miniafservice \
-    minimediaservice \
     minisfservice \
-    libcameraservice\
+    libdroidmedia \
+    libcamera_compat_layer \
     libui_compat_layer \
     libsf_compat_layer \
-    libaudioflingerglue \
-    camera_service \
-    ubuntu-platform-api
+    libmedia_compat_layer \
+    minimediaservice \
+    miniafservice
+
+
+# Ubuntu Touch common USB initialization
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/ubuntu/usr/share/usbinit/setupusb:system/halium/usr/share/usbinit/setupusb \
+    $(LOCAL_PATH)/ubuntu/mtp-state.conf:system/halium/etc/init/mtp-state.conf
+#    $(LOCAL_PATH)/ubuntu/usr/share/upstart/sessions/mtp-server.conf:system/halium/usr/share/upstart/sessions/mtp-server.conf
 
 # telepathy-ofono quirks
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.t-o.quirk.forcesink=sink.primary_output \
-    ro.t-o.quirk.forcesource=source.record_24_primary_input \
-    media.stagefright.legacyencoder=true \
-    media.stagefright.less-secure=true
+    ro.t-o.quirk.forcesource=source.record_24_primary_input 
 
-#aethercastctl
 PRODUCT_PROPERTY_OVERRIDES += \
-    ubuntu.widi.supported=1
+    persist.camera.HAL3.enabled=1 \
+    audio.deep_buffer.media=true
+
+# Ubuntu Touch common USB initialization
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/ubuntu/device-hacks.conf:system/halium/etc/init/device-hacks.conf \
+
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/wifi/wpa_supplicant_overlay.conf:system/etc/wifi/wpa_supplicant_overlay.conf

@@ -198,3 +198,24 @@
   owner @{HOME}/.Private/** mrixwlk,
   # new-style encrypted $HOME
 owner @{HOMEDIRS}/.ecryptfs/*/.Private/** mrixwlk,
+
+dbus (send)
+       bus=session
+       path="/com/canonical/usensord/haptic"
+       interface="org.freedesktop.DBus.Introspectable"
+       member=Introspect
+       peer=(name=com.canonical.usensord,label=unconfined),
+
+dbus (send)
+       bus=session
+       path="/com/canonical/libertine/Service/Operations"
+       interface="com.canonical.libertine.Service.Operations"
+       member=list
+       peer=(name=com.canonical.libertine.Service,label=unconfined),
+
+dbus (send)
+       bus=session
+       path="/com/canonical/libertine/Service/OperationsMonitor"
+       interface="com.canonical.libertine.Service.OperationsMonitor"
+       member={running,last_error,result}
+       peer=(name=com.canonical.libertine.Service,label=unconfined),

@@ -57,7 +57,7 @@ BOARD_RAMDISK_OFFSET     := 0x02200000
 TARGET_KERNEL_APPEND_DTB := true
 TARGET_KERNEL_ARCH := arm64
 # TARGET_KERNEL_SOURCE := kernel/lge/msm-3.18-git
-TARGET_KERNEL_SOURCE := kernel/lge/msm-3.18-git
+TARGET_KERNEL_SOURCE := kernel/lge/msm-3.18
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
 
 # Audio

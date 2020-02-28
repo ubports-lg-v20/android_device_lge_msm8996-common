@@ -78,21 +78,20 @@ service qcamerasvr /system/bin/mm-qcamera-daemon
     group camera system inet input graphics
 
 # Fingerprint service
-service fingerprintd /system/bin/fingerprintd
-    class late_start
-    user system
-    group system input
+#service fingerprintd /system/bin/fingerprintd
+#    class late_start
+#    user system
+#    group system input
 
-service qfp-daemon /system/bin/qfp-daemon
-    class late_start
-    user system
-    group system drmrpc diag input
+#service qfp-daemon /system/bin/qfp-daemon
+#    class late_start
+#    user system
+#    group system drmrpc diag input
 
-service qvop-daemon /system/bin/qvop-daemon
-    class late_start
-    user system
-    group system drmrpc
-    disabled
+#service qvop-daemon /system/bin/qvop-daemon
+#    class late_start
+#    user system
+#    group system drmrpc
 
 # Start up peripheral manager
 service per_mgr system/bin/pm-service
@@ -158,12 +157,6 @@ service thermal-engine /system/vendor/bin/thermal-engine
 #    user root
 #    group root
 
-service init_wlan_bt /system/bin/sh /system/etc/init_wlan_bt.sh
-    class main
-    user root
-    group root
-    oneshot
-
 service adsprpcd /system/bin/adsprpcd
     class main
     user media
@@ -189,7 +182,6 @@ service tlocd /system/bin/tloc_daemon
     class late_start
     user system
     group drmrpc gps net_raw
-    disabled
 
 service energy-awareness /system/bin/energy-awareness
     class main
@@ -197,7 +189,7 @@ service energy-awareness /system/bin/energy-awareness
     group system
     oneshot
 
-service mdtp_service /system/vendor/bin/mdtp_service
-   class late_start
-   user system
-   group system
+#service mdtp_service /system/vendor/bin/mdtp_service
+#   class late_start
+#   user system
+#   group system

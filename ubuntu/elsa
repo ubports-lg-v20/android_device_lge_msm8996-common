@@ -8,9 +8,15 @@
 #
 
 
-PATCHRAM_ARGS="--patchram /vendor/firmware/BCM4358A3.hcd \
+PATCHRAM_ARGS="--patchram /vendor/firmware/BCM4358A310U.hcd \
                    --no2bytes \
-                   --enable_hci"
+		   --scopcm=0,4,0,0,0,0,0,3,0,0 \
+		   --enable_hci \
+		   --enable_lpm \
+		   --baudrate 3000000 \
+		   --use_baudrate_for_download \
+		   --tosleep=50000"
+
 
 chmod 0660 /sys/class/rfkill/rfkill0/state
 chmod 0660 /sys/class/rfkill/rfkill0/type
@@ -18,4 +24,4 @@ chgrp dialout /sys/class/rfkill/rfkill0/state
 chgrp dialout /sys/class/rfkill/rfkill0/type
 rfkill unblock bluetooth
 
-/usr/bin/brcm_patchram_plus $PATCHRAM_ARGS /dev/ttyHS0 &
+#/usr/bin/brcm_patchram_plus $PATCHRAM_ARGS /dev/ttyHS0 &

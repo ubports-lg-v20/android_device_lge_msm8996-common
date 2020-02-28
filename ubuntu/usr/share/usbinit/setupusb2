@@ -1,0 +1,127 @@
+CONFIG_DIR=/dev/config
+GADGET_DIR=$CONFIG_DIR/usb_gadget
+SERIALNUMBER=`getprop ro.serialno`
+MANUFACTURER=`getprop ro.product.manufacturer`
+PRODUCT=`getprop ro.product.model`
+PRODUCT_ID_SUFFIX=`getprop ro.usb.pid_suffix`
+CONTROLLER=`getprop sys.usb.controller`
+
+write() {
+    if [ ! -e "$1" ]; then
+        return
+    fi
+	echo -n "$2" >"$1"
+}
+
+symlink() {
+    ln -s "$1" "$2"
+}
+
+setup_mtp() {
+    echo "setup_mtp ******** "
+    
+
+    #write /sys/class/android_usb/android0/enable 0
+    #write /sys/class/android_usb/android0/idVendor 1004
+    #write /sys/class/android_usb/android0/idProduct 62CE
+    #write /sys/class/android_usb/android0/bDeviceClass 0
+    #write /sys/class/android_usb/android0/bDeviceSubClass 0
+    #write /sys/class/android_usb/android0/bDeviceProtocol 0
+    #write /sys/class/android_usb/android0/f_acm/acm_transports tty
+    #write /sys/class/android_usb/android0/f_diag/clients diag
+    #write /sys/class/android_usb/android0/functions mtp
+    #write /sys/class/android_usb/android0/enable 1
+    #setprop sys.usb.state mtp
+    setprop sys.usb.config mtp
+}
+
+setup_adb() {
+    echo "setup_adb ************ "
+    #write /sys/class/android_usb/android0/enable 0
+    #write /sys/class/android_usb/android0/idVendor 1004
+    #write /sys/class/android_usb/android0/idProduct 633A
+    #write /sys/class/android_usb/android0/bDeviceClass 239
+    #write /sys/class/android_usb/android0/bDeviceSubClass 2
+    #write /sys/class/android_usb/android0/bDeviceProtocol 1
+    #write /sys/class/android_usb/android0/f_acm/acm_transports tty
+    #write /sys/class/android_usb/android0/f_diag/clients diag
+    #write /sys/class/android_usb/android0/functions adb
+    #write /sys/class/android_usb/android0/enable 1
+    #start adbd
+    #setprop sys.usb.state adb
+    setprop sys.usb.config adb
+}
+
+setup_mtp_adb() {
+    echo "setup_mtp_adb ************* "
+    #write /sys/class/android_usb/android0/enable 0
+    #write /sys/class/android_usb/android0/idVendor 1004
+    #write /sys/class/android_usb/android0/idProduct 62CE
+    #write /sys/class/android_usb/android0/bDeviceClass 0
+    #write /sys/class/android_usb/android0/bDeviceSubClass 0
+    #write /sys/class/android_usb/android0/bDeviceProtocol 0
+    #write /sys/class/android_usb/android0/f_acm/acm_transports tty
+    #write /sys/class/android_usb/android0/f_diag/clients diag
+    #write /sys/class/android_usb/android0/functions mtp,adb
+    #write /sys/class/android_usb/android0/enable 1
+    #start adbd
+    #setprop sys.usb.state mtp,adb
+    setprop sys.usb.config mtp
+}
+
+setup_rndis() {
+    echo "setup_rndis ************* "
+    #write /sys/class/android_usb/android0/enable 0
+    #write /sys/class/android_usb/android0/idVendor 1004
+    #write /sys/class/android_usb/android0/idProduct 62C4
+    #write /sys/class/android_usb/android0/bDeviceClass 0
+    #write /sys/class/android_usb/android0/bDeviceSubClass 0
+    #write /sys/class/android_usb/android0/bDeviceProtocol 1
+    #write /sys/class/android_usb/android0/f_acm/acm_transports tty
+    #write /sys/class/android_usb/android0/f_diag/clients diag
+    #write /sys/class/android_usb/android0/functions rndis
+    #write /sys/class/android_usb/android0/enable 1
+    #setprop sys.usb.state rndis
+    setprop sys.usb.config rndis
+}
+
+reset_usb() {
+    echo "reset_usb"
+    
+}
+
+setup_boot() {
+    if [ -e /dev/.usb_setup_done ]; then
+        echo "Boot setup done"
+        return
+    fi
+echo "setup_boot ************* "
+    #mkdir -P /dev/usb-ffs
+    #mkdir -p /dev/usb-ffs/adb
+    #chmod 0770 /dev/usb-ffs
+    #chmod 0770 /dev/usb-ffs/adb
+    
+    # mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=2000
+    #mount -o uid=32011,gid=32011 -t functionfs adb /dev/usb-ffs/adb || true
+    #write /sys/class/android_usb/android0/f_ffs/aliases adb
+
+    touch /dev/.usb_setup_done
+}
+
+setup_boot
+
+if [ "$1" == "rndis" ]; then
+    setup_rndis
+elif [ "$1" == "mtp" ]; then
+    setup_mtp
+elif [ "$1" == "adb" ]; then
+    setup_adb
+elif [ "$1" == "mtp_adb" ]; then
+    setup_mtp_adb
+elif [ "$1" == "reset" ]; then
+    reset_usb
+else
+    echo "No configuration selected."
+fi
+
+exit 0
