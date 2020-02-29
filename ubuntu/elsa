@@ -24,4 +24,4 @@ chgrp dialout /sys/class/rfkill/rfkill0/state
 chgrp dialout /sys/class/rfkill/rfkill0/type
 rfkill unblock bluetooth
 
-#/usr/bin/brcm_patchram_plus $PATCHRAM_ARGS /dev/ttyHS0 &
+/usr/bin/brcm_patchram_plus $PATCHRAM_ARGS /dev/ttyHS0 &
