@@ -37,7 +37,7 @@ setup_mtp_adb() {
     write $ANDROID_USB/iManufacturer "Mer Boat Loader"
     write $ANDROID_USB/iProduct      "$PRODUCT"
     write $ANDROID_USB/iSerial       "$SERIALNUMBER"
-    write $ANDROID_USB/functions     rndis,mtp
+    write $ANDROID_USB/functions     mtp,adb:mtp,acm,diag,adb
     write $ANDROID_USB/enable        1
     # setprop sys.usb.state mtp,adb
 }

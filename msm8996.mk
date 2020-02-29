@@ -327,6 +327,12 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ubuntu/BCM4358A310U.hcd:system/vendor/firmware/BCM4358A310U.hcd \
     $(LOCAL_PATH)/ubuntu/switch:system/halium/usr/share/h2w/switch
 
+# Ubuntu Touch Fix MTP connection
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/ubuntu/usr/share/usbinit/setupusb:system/halium/usr/share/usbinit/setupusb \
+    $(LOCAL_PATH)/ubuntu/mtp-state.conf:system/halium/etc/init/mtp-state.conf
+
+
 # Ubuntu
 PRODUCT_PACKAGES += \
     libaudioflingerglue \
@@ -340,12 +346,6 @@ PRODUCT_PACKAGES += \
     minimediaservice \
     miniafservice
 
-
-# Ubuntu Touch common USB initialization
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/ubuntu/usr/share/usbinit/setupusb:system/halium/usr/share/usbinit/setupusb \
-    $(LOCAL_PATH)/ubuntu/mtp-state.conf:system/halium/etc/init/mtp-state.conf
-#    $(LOCAL_PATH)/ubuntu/usr/share/upstart/sessions/mtp-server.conf:system/halium/usr/share/upstart/sessions/mtp-server.conf
 
 # telepathy-ofono quirks
 PRODUCT_PROPERTY_OVERRIDES += \
